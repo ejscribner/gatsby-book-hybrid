@@ -5,6 +5,30 @@ module.exports = {
     author: `@gatsbyjs`,
   },
   plugins: [
+    {
+      resolve: 'gatsby-firesource',
+      options: {
+        credential: require('./firebase.json'),
+        types: [
+          {
+            type: 'Book',
+            collection: 'books',
+            map: doc => ({ // maps data (each doc) from firestore to objects we can query using graphQL
+              title: doc.title,
+              summary: doc.summary,
+              author___NODE: doc.author.id, // ___NODE allows us to query author ref from graphQL (defines key?)
+            })
+          },
+          {
+            type: 'Author',
+            collection: 'authors',
+            map: doc => ({ // maps data (each doc) from firestore to objects we can query using graphQL
+              name: doc.name,
+            })
+          }
+        ]
+      }
+    },
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-image`,
     {
