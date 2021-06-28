@@ -4,6 +4,38 @@ import { StaticImage } from "gatsby-plugin-image"
 
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import BookItem from "../components/BookItem"
+import styled from 'styled-components'
+
+const LinkButton = styled.div`
+  text-align: right;
+  
+  a {
+    padding: 10px;
+    color: rebeccapurple;
+    border: 1px solid rebeccapurple;
+    background: #fff;
+    
+    text-decoration: none;
+    
+    /* Hover stuff */
+    -o-transition:.5s;
+    -ms-transition:.5s;
+    -moz-transition:.5s;
+    -webkit-transition:.5s;
+    /* ...and now for the proper property */
+    transition:.5s;
+    
+    &:hover {
+      background: rebeccapurple;
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+  
+
+`
+
 
 const IndexPage = (props) => {
   console.log(props);
@@ -14,17 +46,18 @@ const IndexPage = (props) => {
     {/*  for each edge (book) we want to render node.title node.summary and node.author.name*/}
 
       {props.data.allBook.edges.map(edge => (
-        <div key={edge.node.id}>
-          <h2>
-            {edge.node.title} - <small>{edge.node.author.name}</small>
-          </h2>
-          <div>
-            {edge.node.summary}
-          </div>
-          <Link to={`/book/${edge.node.id}`}>
-            Join conversation
-          </Link>
-        </div>
+        <BookItem
+          authorName={edge.node.author.name}
+          bookSummary={edge.node.summary}
+          bookTitle={edge.node.title}
+          bookCover={edge.node.localImage.childImageSharp.fixed}>
+          <LinkButton>
+            <Link to={`/book/${edge.node.id}`}>
+              Join conversation
+            </Link>
+          </LinkButton>
+
+        </BookItem>
       ))}
     </Layout>
   );
@@ -42,6 +75,13 @@ export const query = graphql`
           id
           summary
           title
+          localImage {
+            childImageSharp {
+              fixed(width:200) {
+                ...GatsbyImageSharpFixed
+              }
+            }
+          }
           author {
             name
           }

@@ -8,6 +8,7 @@
 
 const path = require('path');
 
+// gatsby expects createPages() func, would not work w/ diff name
 exports.createPages = ({graphql, actions}) => {
   // under the hood, actions refers to redux actions
   const {createPage} = actions;
@@ -22,6 +23,13 @@ exports.createPages = ({graphql, actions}) => {
             id
             summary
             title
+            localImage {
+              childImageSharp {
+                fixed(width:200) {
+                  ...GatsbyImageSharpFixed
+                }
+              }
+            }
             author {
               name
             }
@@ -36,10 +44,10 @@ exports.createPages = ({graphql, actions}) => {
 
     // result is the same thing we had on index page
     result.data.allBook.edges.forEach((book) => {
-      createPage({
+      createPage({ // loops through all books and dynamically creates root for us based on book id
         path: `/book/${book.node.id}`,
         component: bookTemplate, // need a component to render with these options
-        context: book.node
+        context: book.node // passes in book data to bookTemplate + maps to props.pageContext (propery)
       });
     });
 

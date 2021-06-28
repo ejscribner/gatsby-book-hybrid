@@ -1,10 +1,18 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
-    author: `@gatsbyjs`,
+    title: `Gatsby Learning - Book Club`,
+    description: `A HYBRID site created to learn more about Gatsby.js`,
+    author: `@ejscribner`,
   },
   plugins: [
+    { // download and generate URLs for images from firebase
+      resolve: `gatsby-plugin-remote-images`,
+      options: {
+        nodeType: 'Book', // refrences the book node type created in allBook query
+        imagePath: 'imageUrl',
+      },
+    },
+    'gatsby-plugin-styled-components',
     {
       resolve: 'gatsby-firesource',
       options: {
@@ -16,6 +24,7 @@ module.exports = {
             map: doc => ({ // maps data (each doc) from firestore to objects we can query using graphQL
               title: doc.title,
               summary: doc.summary,
+              imageUrl: doc.imageUrl,
               author___NODE: doc.author.id, // ___NODE allows us to query author ref from graphQL (defines key?)
             })
           },
