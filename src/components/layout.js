@@ -8,6 +8,7 @@
 import * as React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
+import { FirebaseContext, useAuth } from "./Firebase"
 
 import Header from "./header"
 import "./layout.css"
@@ -23,8 +24,13 @@ const Layout = ({ children }) => {
     }
   `)
 
+  const {user, firebase, loading} = useAuth(); // destructure state items set in useAuth
+
   return (
-    <>
+    // value contains global state for provider
+    // any component that needs to access context state, user, firebase, loading
+    // we can wrap in FirebaseContext.Consumer
+    <FirebaseContext.Provider value={{user, firebase, loading}}>
       <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
       <div
         style={{
@@ -35,7 +41,7 @@ const Layout = ({ children }) => {
       >
         <main>{children}</main>
       </div>
-    </>
+    </FirebaseContext.Provider>
   )
 }
 

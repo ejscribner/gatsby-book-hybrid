@@ -8,6 +8,22 @@
 
 const path = require('path');
 
+exports.onCreateWebpackConfig = ({ actions, stage }) => {
+  if (stage === "develop-html" || stage === "build-html") {
+    actions.setWebpackConfig({
+      resolve: {
+        mainFields: ["main"],
+      },
+    })
+  } else {
+    actions.setWebpackConfig({
+      resolve: {
+        mainFields: ["browser", "module", "main"],
+      },
+    })
+  }
+}
+
 // gatsby expects createPages() func, would not work w/ diff name
 exports.createPages = ({graphql, actions}) => {
   // under the hood, actions refers to redux actions
@@ -21,18 +37,6 @@ exports.createPages = ({graphql, actions}) => {
         edges {
           node {
             id
-            summary
-            title
-            localImage {
-              childImageSharp {
-                fixed(width:200) {
-                  ...GatsbyImageSharpFixed
-                }
-              }
-            }
-            author {
-              name
-            }
           }
         }
       }
@@ -47,7 +51,7 @@ exports.createPages = ({graphql, actions}) => {
       createPage({ // loops through all books and dynamically creates root for us based on book id
         path: `/book/${book.node.id}`,
         component: bookTemplate, // need a component to render with these options
-        context: book.node // passes in book data to bookTemplate + maps to props.pageContext (propery)
+        context: { bookId: book.node.id } // we can pass in bookID and just query the book directly from bookTemplate
       });
     });
 

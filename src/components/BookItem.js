@@ -1,8 +1,6 @@
 import styled from "styled-components"
 import * as react from "react";
 import React from "react"
-import { GatsbyImage } from "gatsby-plugin-image"
-import Img from "gatsby-image"
 
 // styled.<anyHTMLtag> to create a component w/ styles that we can use
 const BookItemWrapper = styled.section `
@@ -37,8 +35,7 @@ const BookItem = ({ authorName, bookTitle, bookSummary, bookCover, children }) =
   return (
     <BookItemWrapper>
       <BookItemImageWrapper>
-        {/*<img src={bookCover} alt="" />*/}
-        <Img fixed={bookCover} />
+        <img src={bookCover} alt="" />
       </BookItemImageWrapper>
       <BookItemContentWrapper>
         <h2>

@@ -1,8 +1,6 @@
 import * as React from "react"
 import { Link, graphql } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
 
-import Layout from "../components/layout"
 import Seo from "../components/seo"
 import BookItem from "../components/BookItem"
 import styled from 'styled-components'
@@ -40,7 +38,7 @@ const LinkButton = styled.div`
 const IndexPage = (props) => {
   console.log(props);
   return (
-    <Layout>
+    <section>
     {/*  Loop through books coming back from query (in props, map thru edges edges array) */}
     {/*  props.data.allbook.edges*/}
     {/*  for each edge (book) we want to render node.title node.summary and node.author.name*/}
@@ -50,7 +48,7 @@ const IndexPage = (props) => {
           authorName={edge.node.author.name}
           bookSummary={edge.node.summary}
           bookTitle={edge.node.title}
-          bookCover={edge.node.localImage.childImageSharp.fixed}>
+          bookCover={edge.node.localImage.publicURL}>
           <LinkButton>
             <Link to={`/book/${edge.node.id}`}>
               Join conversation
@@ -59,7 +57,7 @@ const IndexPage = (props) => {
 
         </BookItem>
       ))}
-    </Layout>
+    </section>
   );
 }
 
@@ -76,11 +74,7 @@ export const query = graphql`
           summary
           title
           localImage {
-            childImageSharp {
-              fixed(width:200) {
-                ...GatsbyImageSharpFixed
-              }
-            }
+            publicURL 
           }
           author {
             name
